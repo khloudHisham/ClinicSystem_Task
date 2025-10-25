@@ -1,3 +1,7 @@
+using clinicSystem.Models.Data;
+using Microsoft.EntityFrameworkCore;
+
+
 namespace clinicSystem
 {
     public class Program
@@ -8,6 +12,10 @@ namespace clinicSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add database context
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
