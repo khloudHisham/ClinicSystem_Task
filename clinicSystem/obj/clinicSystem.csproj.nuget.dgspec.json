@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj": {}
+    "E:\\DMS\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj": {}
   },
   "projects": {
-    "E:\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj": {
+    "E:\\DMS\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj",
+        "projectUniqueName": "E:\\DMS\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj",
         "projectName": "clinicSystem",
-        "projectPath": "E:\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj",
+        "projectPath": "E:\\DMS\\DMS\\clinicSystem\\clinicSystem\\clinicSystem.csproj",
         "packagesPath": "C:\\Users\\MSB\\.nuget\\packages\\",
-        "outputPath": "E:\\DMS\\clinicSystem\\clinicSystem\\obj\\",
+        "outputPath": "E:\\DMS\\DMS\\clinicSystem\\clinicSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\MSB\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,12 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore.Proxies": {
               "target": "Package",
               "version": "[9.0.10, )"
@@ -59,6 +65,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.10, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
