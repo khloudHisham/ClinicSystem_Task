@@ -1,19 +1,17 @@
-﻿@model clinicSystem.Models.Entities.Doctor
+﻿@model clinicSystem.Models.Entities.Patient
 @{
-    ViewData["Title"] = "New Doctor";
+    ViewData["Title"] = "New Patient";
 }
-
-
 
 <div class="container my-5 animate__animated animate__fadeIn">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-success fw-bold display-5">Create New Doctor</h1>
-        <a class="btn btn-outline-danger btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Doctor/Index">
+        <h1 class="text-success fw-bold display-5">Create New Patient</h1>
+        <a class="btn btn-outline-danger btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Patient/Index">
             <i class="bi bi-arrow-left-circle"></i> Back
         </a>
     </div>
 
-    @using (Html.BeginForm("SaveNew", "Doctor", FormMethod.Post))
+    @using (Html.BeginForm("SaveNew", "Patient", FormMethod.Post))
     {
         <div class="row g-3">
             <div class="col-md-6">
@@ -34,20 +32,21 @@
 
             <div class="col-md-6">
                 <div class="form-floating mb-3">
-                    @Html.DropDownListFor(m => m.ClinicId, (SelectList)ViewBag.Clinics, "-- Select Clinic --", new { @class = "form-select" })
-                    @Html.LabelFor(m => m.Clinic)
-                    @Html.ValidationMessageFor(m => m.ClinicId, "", new { @class = "text-danger small" })
+                    @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.LabelFor(m => m.BirthDate)
+                    @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger small" })
                 </div>
             </div>
         </div>
 
         <div class="d-flex justify-content-center mt-4">
             <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm animate__animated animate__pulse">
-                <i class="bi bi-plus-circle-dotted"></i> Add Doctor
+                <i class="bi bi-plus-circle-dotted"></i> Add Patient
             </button>
         </div>
     }
 </div>
+
 
 
 
@@ -75,3 +74,4 @@
         transition: all 0.4s ease;
     }
 </style>
+

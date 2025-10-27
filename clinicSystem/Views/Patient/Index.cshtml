@@ -1,16 +1,17 @@
-﻿@model List<clinicSystem.Models.Entities.Doctor>
+﻿@model List<clinicSystem.Models.Entities.Patient>
 @{
-    ViewData["Title"] = "Doctors";
+    ViewData["Title"] = "Patients";
 }
+
 
 <div class="container my-5 animate__animated animate__fadeIn">
     <h1 class="text-center text-success mb-4 fw-bold display-4">
-        All Doctors
+        All Patients
     </h1>
 
     <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-success btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
-            <i class="bi bi-plus-circle"></i> Add Doctor
+            <i class="bi bi-plus-circle"></i> Add Patient
         </a>
     </div>
 
@@ -20,7 +21,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Clinic</th>
+                    <th>Age</th>
+                    <th>BirthDate</th>
                 </tr>
             </thead>
             <tbody class="text-center">
@@ -29,13 +31,16 @@
                     <tr class="table-row-hover">
                         <td class="fw-bold text-primary">@item.Name</td>
                         <td>@item.Address</td>
-                        <td>@item.Clinic.Name</td>
+                        <td>@item.Age</td>
+                        <td>@item.BirthDate.ToShortDateString()</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+
 
 
 
@@ -76,4 +81,3 @@
         text-decoration: underline;
     }
 </style>
-
