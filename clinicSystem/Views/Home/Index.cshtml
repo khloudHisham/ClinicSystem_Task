@@ -2,7 +2,84 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    /* Basic Styles */
+    .home-container {
+        text-align: center;
+        padding: 5rem 1rem;
+    }
+
+        .home-container h1 {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-container h3 {
+            font-size: 1.8rem;
+            color: #7f8c8d;
+            margin-bottom: 3rem;
+        }
+
+    /* Button Styles */
+    .custom-btn {
+        transition: all 0.3s ease;
+        padding: 1rem 3rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.2rem;
+        border: 2px solid #0dcaf0;
+        color: #0dcaf0;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .custom-btn:hover {
+            background-color: #0dcaf0;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .custom-btn i {
+            font-size: 1.5rem;
+        }
+
+    /* Button Container */
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    }
+</style>
+
+<!-- Page Content -->
+<div class="home-container animate__animated animate__fadeIn">
+    <h1>Welcome To <span class="text-primary fw-bolder">Clinica</span></h1>
+    <h3>Your Health is Our Priority</h3>
+
+    <div class="btn-container animate__animated animate__fadeInUp">
+        <a class="btn custom-btn" asp-controller="Doctor" asp-action="Index">
+            <i class="bi bi-person-badge"></i> Doctors
+        </a>
+        <a class="btn custom-btn" asp-controller="Patient" asp-action="Index">
+            <i class="bi bi-people"></i> Patient
+        </a>
+        <a class="btn custom-btn" asp-controller="Clinic" asp-action="Index">
+            <i class="bi bi-hospital"></i> Clinic
+        </a>
+        <a class="btn custom-btn" asp-controller="Schedule" asp-action="Index">
+            <i class="bi bi-calendar-event"></i> Schedule
+        </a>
+    </div>
 </div>
