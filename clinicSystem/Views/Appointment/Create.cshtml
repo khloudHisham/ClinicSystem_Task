@@ -1,7 +1,166 @@
-﻿
+﻿﻿@using Newtonsoft.Json
+@model clinicSystem.Models.Entities.Appointment
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Appointment";
 }
 
-<h1>Create</h1>
+
+@if (TempData["PopupData"] != null)
+{
+    <div id="popup">
+        <pre id="popupContent">@TempData["PopupData"]</pre>
+        <button onclick="closePopup()" class="btn btn-secondary">Ok</button>
+    </div>
+    <div id="overlay"></div>
+}
+
+<div class="container my-5 animate__animated animate__fadeIn">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-success fw-bold display-5">Create New Appointment</h1>
+        <a class="btn btn-outline-danger btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Appointment/Index">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
+    </div>
+
+    @using (Html.BeginForm("SaveNew", "Appointment", FormMethod.Post))
+    {
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    @Html.DropDownListFor(m => m.PatientId, (SelectList)ViewBag.Patients, "-- Select Patient --", new { @class = "form-select" })
+                    @Html.LabelFor(m => m.Patient)
+                    @Html.ValidationMessageFor(m => m.PatientId, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    @Html.DropDownListFor(m => m.DoctorId, (SelectList)ViewBag.Doctors, "-- Select Doctor --", new { @class = "form-select" })
+                    @Html.LabelFor(m => m.Doctor)
+                    @Html.ValidationMessageFor(m => m.DoctorId, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(m => m.AppointmentDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.LabelFor(m => m.AppointmentDate)
+                    @Html.ValidationMessageFor(m => m.AppointmentDate, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(m => m.AppointmentTime, "{0:hh\\:mm}", new { @class = "form-control", type = "time" })
+                    @Html.LabelFor(m => m.AppointmentTime)
+                    @Html.ValidationMessageFor(m => m.AppointmentTime, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", type = "number", min = "1", value = "30" })
+                    @Html.LabelFor(m => m.Duration)
+                    @Html.ValidationMessageFor(m => m.Duration, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm animate__animated animate__pulse">
+                <i class="bi bi-plus-circle-dotted"></i> Add Appointment
+            </button>
+        </div>
+    }
+</div>
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    .form-floating > .form-control, .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        padding: 1rem 0.75rem;
+    }
+
+    .form-floating > label {
+        padding: 0.75rem 0.75rem;
+        pointer-events: none;
+        font-weight: bold;
+        color: #6c757d;
+    }
+
+    button.btn-success:hover {
+        background: linear-gradient(135deg, #28a745, #218838);
+        border-color: transparent;
+        transform: scale(1.05);
+        transition: all 0.4s ease;
+    }
+
+
+    /* Overlay background */
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(3px);
+        z-index: 999;
+        display: block;
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Popup modal */
+    #popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        min-width: 300px;
+        max-width: 90%;
+        display: block;
+        animation: popupShow 0.5s ease forwards;
+    }
+
+    /* Popup Content */
+    #popupContent {
+        margin-bottom: 1rem;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    /* Close button inside popup */
+    #popup button.btn-secondary {
+        display: block;
+        margin: 0 auto;
+        padding: 0.5rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+
+        #popup button.btn-secondary:hover {
+            background-color: #5a6268;
+        }
+</style>
+
+<script>
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+</script>
 
