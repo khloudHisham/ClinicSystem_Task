@@ -1,7 +1,62 @@
-﻿
+﻿@model List<clinicSystem.Models.Entities.Doctor>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Doctors";
 }
 
-<h1>Index</h1>
+<h1>Doctors</h1>
+
+me</th>
+                    <th>Address</th>
+                    <th>Clinic</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @foreach (var item in Model)
+                {
+                    <tr class="table-row-hover">
+                        <td class="fw-bold text-primary">@item.Name</td>
+                        <td>@item.Address</td>
+                        <td>@item.Clinic.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .table thead th {
+        font-size: 1.2rem;
+        letter-spacing: 0.5px;
+    }
+
+    .table tbody td {
+        font-size: 1.05rem;
+        padding: 0.75rem;
+    }
+
+    .btn-success {
+        transition: all 0.4s ease;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+
+    .table-row-hover:hover {
+        background-color: #e6f7ff !important;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    a.text-primary:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+</style>
 
