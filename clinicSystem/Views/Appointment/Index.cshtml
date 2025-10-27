@@ -1,0 +1,87 @@
+﻿@model List<clinicSystem.Models.Entities.Appointment>
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+
+<div class="container my-5 animate__animated animate__fadeIn">
+    <h1 class="text-center text-success mb-4 fw-bold display-4">
+        All Appointments
+    </h1>
+    <h6 class="text-center mb-4"><span class="text-danger fw-bolder">Note:</span> The Appointment for Patient include (Time + Duration)</h6>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-success btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
+            <i class="bi bi-plus-circle"></i> Add Appointment
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered align-middle shadow-sm animate__animated animate__fadeInUp">
+            <thead class="table-success text-center">
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @foreach (var item in Model)
+                {
+                    <tr class="table-row-hover">
+                        <td class="fw-bold text-primary">@item.Patient.Name</td>
+                        <td>@item.Doctor.Name</td>
+                        <td>@item.AppointmentDate.ToShortDateString()</td>
+                        <td>@item.AppointmentTime</td>
+                        <td>@item.Duration</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .table thead th {
+        font-size: 1.2rem;
+        letter-spacing: 0.5px;
+    }
+
+    .table tbody td {
+        font-size: 1.05rem;
+        padding: 0.75rem;
+    }
+
+    .btn-success {
+        transition: all 0.4s ease;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+
+    .table-row-hover:hover {
+        background-color: #e6f7ff !important;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    a.text-primary:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+</style>
+
+

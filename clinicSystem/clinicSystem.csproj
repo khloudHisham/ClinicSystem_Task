@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Appointment\" />
     <Folder Include="Views\Clinic\" />
   </ItemGroup>
 
