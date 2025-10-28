@@ -1,9 +1,7 @@
-﻿﻿@using Newtonsoft.Json
-@model clinicSystem.Models.Entities.Appointment
+﻿@model clinicSystem.Models.Entities.Appointment
 @{
     ViewData["Title"] = "New Appointment";
 }
-
 
 @if (TempData["PopupData"] != null)
 {
@@ -29,39 +27,34 @@
                 <div class="form-floating mb-3">
                     @Html.DropDownListFor(m => m.PatientId, (SelectList)ViewBag.Patients, "-- Select Patient --", new { @class = "form-select" })
                     @Html.LabelFor(m => m.Patient)
-                    @Html.ValidationMessageFor(m => m.PatientId, "", new { @class = "text-danger small" })
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-floating mb-3">
-                    @Html.DropDownListFor(m => m.DoctorId, (SelectList)ViewBag.Doctors, "-- Select Doctor --", new { @class = "form-select" })
+                    @Html.DropDownListFor(m => m.DoctorId, (SelectList)ViewBag.Doctors, "-- Select Doctor --", new { @class = "form-select", id = "doctorSelect" })
                     @Html.LabelFor(m => m.Doctor)
-                    @Html.ValidationMessageFor(m => m.DoctorId, "", new { @class = "text-danger small" })
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.AppointmentDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.TextBoxFor(m => m.AppointmentDate,  new { @class = "form-control", type = "date", id = "appointmentDate" })
                     @Html.LabelFor(m => m.AppointmentDate)
-                    @Html.ValidationMessageFor(m => m.AppointmentDate, "", new { @class = "text-danger small" })
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.AppointmentTime, "{0:hh\\:mm}", new { @class = "form-control", type = "time" })
+                    @Html.DropDownListFor(m => m.AppointmentTime, new List<SelectListItem>(), "-- Select Available Time --", new { @class = "form-select", id = "appointmentTime" })
                     @Html.LabelFor(m => m.AppointmentTime)
-                    @Html.ValidationMessageFor(m => m.AppointmentTime, "", new { @class = "text-danger small" })
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", type = "number", min = "1", value = "30" })
+                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", type = "number", min = "1" })
                     @Html.LabelFor(m => m.Duration)
-                    @Html.ValidationMessageFor(m => m.Duration, "", new { @class = "text-danger small" })
                 </div>
             </div>
         </div>
@@ -74,93 +67,36 @@
     }
 </div>
 
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function loadFreeSlots() {
+            var doctorId = $("#doctorSelect").val();
+            var date = $("#appointmentDate").val();
+            if (!doctorId || !date) return;
+            $.getJSON('/Appointment/GetFreeSlots', { doctorId: doctorId, appointmentDate: date }, function (data) {
+                availableSlots = data;
+                var timeSelect = $("#appointmentTime");
+                timeSelect.empty();
 
+                if (availableSlots.length === 0) {
+                    timeSelect.append($('<option>').text("No available slots").attr("disabled", true));
+                } else {
+                    $.each(availableSlots, function (i, val) {
+                        // نحول الوقت من 24 إلى 12 ساعة مع AM/PM
+                        let [hours, minutes] = val.split(':');
+                        hours = parseInt(hours);
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12 || 12; // تحويل 0 أو 12 إلى 12
+                        const formattedTime = `${hours}:${minutes} ${ampm}`;
 
+                        timeSelect.append($('<option>').text(formattedTime).val(val));
+                    });
+                }
+            });
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-<style>
-    .form-floating > .form-control, .form-floating > .form-select {
-        height: calc(3.5rem + 2px);
-        padding: 1rem 0.75rem;
-    }
-
-    .form-floating > label {
-        padding: 0.75rem 0.75rem;
-        pointer-events: none;
-        font-weight: bold;
-        color: #6c757d;
-    }
-
-    button.btn-success:hover {
-        background: linear-gradient(135deg, #28a745, #218838);
-        border-color: transparent;
-        transform: scale(1.05);
-        transition: all 0.4s ease;
-    }
-
-
-    /* Overlay background */
-    #overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(3px);
-        z-index: 999;
-        display: block;
-        animation: fadeIn 0.5s ease forwards;
-    }
-
-    /* Popup modal */
-    #popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.8);
-        background: #ffffff;
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-        min-width: 300px;
-        max-width: 90%;
-        display: block;
-        animation: popupShow 0.5s ease forwards;
-    }
-
-    /* Popup Content */
-    #popupContent {
-        margin-bottom: 1rem;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        font-size: 1rem;
-        color: #333;
-    }
-
-    /* Close button inside popup */
-    #popup button.btn-secondary {
-        display: block;
-        margin: 0 auto;
-        padding: 0.5rem 1.5rem;
-        font-size: 1.1rem;
-        font-weight: bold;
-        border-radius: 8px;
-    }
-
-        #popup button.btn-secondary:hover {
-            background-color: #5a6268;
         }
-</style>
 
-<script>
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("overlay").style.display = "none";
-    }
-</script>
-
+        $("#doctorSelect, #appointmentDate").change(loadFreeSlots);
+    </script>
+}

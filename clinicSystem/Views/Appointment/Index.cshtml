@@ -34,7 +34,8 @@
                         <td class="fw-bold text-primary">@item.Patient.Name</td>
                         <td>@item.Doctor.Name</td>
                         <td>@item.AppointmentDate.ToShortDateString()</td>
-                        <td>@item.AppointmentTime</td>
+                        <td>@DateTime.Today.Add(item.AppointmentTime).ToString("hh:mm tt")</td>
+
                         <td>@item.Duration</td>
                     </tr>
                 }

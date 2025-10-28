@@ -12,12 +12,14 @@ namespace clinicSystem.Controllers
         private readonly IGenericRepository<Appointment> _repository;
         private readonly ApplicationDbContext _context;
         private readonly IAppointmentService _appointmentService;
+
         public AppointmentController(IGenericRepository<Appointment> repository, ApplicationDbContext context, IAppointmentService appointmentService)
         {
             _repository = repository;
             _context = context;
             _appointmentService = appointmentService;
         }
+
         public async Task<IActionResult> Index()
         {
             var appointments = await _repository.GetAllAsync();
@@ -26,8 +28,12 @@ namespace clinicSystem.Controllers
 
         public IActionResult New()
         {
+            var appointment = new Appointment
+            {
+                Duration = 30 // Default visit length
+            };
             FillDropdowns();
-            return View("Create");
+            return View("Create", appointment);
         }
 
         [HttpPost]
@@ -35,17 +41,20 @@ namespace clinicSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Validate the appointment
-                var response = await _appointmentService.ValidateAppointmentAsync(appointment.DoctorId, appointment.AppointmentDate.Add(appointment.AppointmentTime), appointment.AppointmentTime, appointment.Duration);
+                var response = await _appointmentService.ValidateAppointmentAsync(
+                    appointment.DoctorId,
+                    appointment.AppointmentDate.Add(appointment.AppointmentTime),
+                    appointment.AppointmentTime,
+                    appointment.Duration
+                );
+
                 if (response.Status)
                 {
-                    // If valid, save the appointment
                     await _repository.AddAsync(appointment);
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    // If not valid, store the msg in TempData to Display for user.
                     TempData["PopupData"] = response.Message;
                 }
             }
@@ -60,12 +69,17 @@ namespace clinicSystem.Controllers
             return RedirectToAction("Index");
         }
 
-        // Helper Method
+        [HttpGet]
+        public async Task<JsonResult> GetFreeSlots(int doctorId, DateTime appointmentDate)
+        {
+            var freeSlots = await _appointmentService.GetFreeSlotsAsync(doctorId, appointmentDate);
+            return Json(freeSlots);
+        }
+
         private void FillDropdowns(int? selectedPatientId = null, int? selectedDoctorId = null)
         {
             ViewBag.Patients = new SelectList(_context.Patients.ToList(), "Id", "Name", selectedPatientId);
             ViewBag.Doctors = new SelectList(_context.Doctors.ToList(), "Id", "Name", selectedDoctorId);
         }
-
     }
 }

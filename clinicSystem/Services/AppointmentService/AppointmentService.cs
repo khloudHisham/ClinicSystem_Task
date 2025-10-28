@@ -1,21 +1,22 @@
 ﻿using clinicSystem.Models.Data;
 using clinicSystem.Models.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace clinicSystem.Services.AppointmentService
 {
-    public class AppointmentService: IAppointmentService
+    public class AppointmentService : IAppointmentService
     {
         private readonly ApplicationDbContext _context;
         public AppointmentService(ApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<GeneralResponse> ValidateAppointmentAsync(int doctorId, DateTime appointmentDateTime, TimeSpan appoinmetTime, int Duration)
+
+        public async Task<GeneralResponse> ValidateAppointmentAsync(int doctorId, DateTime appointmentDateTime, TimeSpan appointmentTime, int duration)
         {
             var dayOfWeek = appointmentDateTime.DayOfWeek.ToString();
 
-            // 1. Verify that the Selected Doctor work on that Day
             var schedule = await _context.Schedules
                 .FirstOrDefaultAsync(s => s.DoctorId == doctorId && s.DayOfWeek == dayOfWeek);
 
@@ -26,34 +27,23 @@ namespace clinicSystem.Services.AppointmentService
                     Message = "No schedule found for the selected doctor on this day."
                 };
 
-            // 2. Verify that the AppointmentDate is in valid work Time for the Doctor
-
-            // Convert appointment time to 12-hour format if necessary
-            TimeSpan adjustedAppointmentTime = appoinmetTime.Hours > 12
-                ? appoinmetTime.Subtract(TimeSpan.FromHours(12))
-                : appoinmetTime;
-
-            if (adjustedAppointmentTime < schedule.StartTime || adjustedAppointmentTime > schedule.EndTime)
+            if (appointmentTime < schedule.StartTime || appointmentTime > schedule.EndTime)
                 return new GeneralResponse
                 {
                     Status = false,
                     Message = "The appointment time is outside of working hours."
                 };
 
-            // 3. Verify that the AppointmentDate not conflict with other appointments
-            var newAppointmentEndTime = appoinmetTime + TimeSpan.FromMinutes(Duration);
-
+            var newAppointmentEndTime = appointmentTime + TimeSpan.FromMinutes(duration);
 
             var appointments = await _context.Appointments
                 .Where(a => a.DoctorId == doctorId && a.AppointmentDate == appointmentDateTime.Date)
                 .ToListAsync();
 
-
             bool conflict = appointments.Any(a =>
-                appoinmetTime < a.AppointmentTime.Add(TimeSpan.FromMinutes(a.Duration)) &&
+                appointmentTime < a.AppointmentTime.Add(TimeSpan.FromMinutes(a.Duration)) &&
                 newAppointmentEndTime > a.AppointmentTime
             );
-
 
             if (conflict)
                 return new GeneralResponse
@@ -62,10 +52,39 @@ namespace clinicSystem.Services.AppointmentService
                     Message = "The selected appointment time is already booked."
                 };
 
-            return new GeneralResponse
+            return new GeneralResponse { Status = true };
+        }
+
+        public async Task<List<string>> GetFreeSlotsAsync(int doctorId, DateTime appointmentDate)
+        {
+            var schedule = await _context.Schedules.FirstOrDefaultAsync(s =>
+                s.DoctorId == doctorId && s.DayOfWeek == appointmentDate.DayOfWeek.ToString());
+
+            if (schedule == null) return new List<string>();
+
+            var appointments = await _context.Appointments
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate == appointmentDate.Date)
+                .ToListAsync();
+
+            var slots = new List<string>();
+            var currentTime = schedule.StartTime;
+
+            while (currentTime + TimeSpan.FromMinutes(30) <= schedule.EndTime)
             {
-                Status = true,
-            };
+                bool conflict = appointments.Any(a =>
+                    currentTime < a.AppointmentTime.Add(TimeSpan.FromMinutes(a.Duration)) &&
+                    currentTime + TimeSpan.FromMinutes(30) > a.AppointmentTime
+                );
+
+
+                if (!conflict) slots.Add(currentTime.ToString(@"hh\:mm"));
+
+
+
+                currentTime += TimeSpan.FromMinutes(30);
+            }
+
+            return slots;
         }
     }
 }

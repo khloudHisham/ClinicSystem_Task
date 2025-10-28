@@ -27,14 +27,20 @@
             <tbody class="text-center">
                 @foreach (var item in Model)
                 {
+                    var start = DateTime.Today.Add(item.StartTime);
+                    var end = DateTime.Today.Add(item.EndTime);
+
                     <tr class="table-row-hover">
                         <td class="fw-bold text-primary">@item.Doctor.Name</td>
                         <td>@item.DayOfWeek</td>
-                        <td>@item.StartTime</td>
-                        <td>@item.EndTime</td>
+
+                        <!-- ✅ عرض بصيغة 12 ساعة مع AM / PM -->
+                        <td>@start.ToString("hh:mm tt")</td>
+                        <td>@end.ToString("hh:mm tt")</td>
                     </tr>
                 }
             </tbody>
+
         </table>
     </div>
 </div>
