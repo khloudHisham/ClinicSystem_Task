@@ -3,68 +3,176 @@
     ViewData["Title"] = "New Appointment";
 }
 
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .welcome-text {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #0dcaf0;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        margin-right: 15px;
+    }
+
+
+    /* ==== General Page Styling ==== */
+    body {
+        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .page-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 3rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    .page-title {
+        font-size: 2.8rem;
+        font-weight: 400;
+        color: #2c3e50;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ==== Custom Blue Buttons ==== */
+    .btn-custom {
+        border: 2px solid #0dcaf0;
+        color: #0dcaf0;
+        background-color: transparent;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        padding: 0.8rem 2.5rem;
+    }
+
+        .btn-custom:hover {
+            background-color: #0dcaf0;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    /* ==== Floating Form Fields ==== */
+    .form-floating label {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    .form-select, .form-control {
+        border-radius: 12px !important;
+        border: 2px solid #0dcaf0 !important;
+        transition: all 0.3s ease;
+    }
+
+        .form-select:focus, .form-control:focus {
+            border-color: #0aa1c0 !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+        }
+
+    /* ==== Popup Styling ==== */
+    #popup {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 2rem 3rem;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        animation: fadeInDown 0.5s ease;
+        text-align: center;
+    }
+
+    #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 @if (TempData["PopupData"] != null)
 {
     <div id="popup">
         <pre id="popupContent">@TempData["PopupData"]</pre>
-        <button onclick="closePopup()" class="btn btn-secondary">Ok</button>
+        <button onclick="closePopup()" class="btn btn-custom mt-3">Ok</button>
     </div>
     <div id="overlay"></div>
 }
 
-<div class="container my-5 animate__animated animate__fadeIn">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-success fw-bold display-5">Create New Appointment</h1>
-        <a class="btn btn-outline-danger btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Appointment/Index">
-            <i class="bi bi-arrow-left-circle"></i> Back
-        </a>
+<div class="container my-5">
+    <div class="page-container animate__animated animate__fadeIn">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="welcome-text">Welcome to Secretary page</span>
+            <h1 class="page-title">Create New Appointment</h1>
+            <a class="btn btn-custom btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Appointment/Index">
+                <i class="bi bi-arrow-left-circle"></i> Back
+            </a>
+        </div>
+
+
+        @using (Html.BeginForm("SaveNew", "Appointment", FormMethod.Post))
+        {
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.DropDownListFor(m => m.PatientId, (SelectList)ViewBag.Patients, "-- Select Patient --", new { @class = "form-select" })
+                        @Html.LabelFor(m => m.Patient)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.DropDownListFor(m => m.DoctorId, (SelectList)ViewBag.Doctors, "-- Select Doctor --", new { @class = "form-select", id = "doctorSelect" })
+                        @Html.LabelFor(m => m.Doctor)
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(m => m.AppointmentDate, new { @class = "form-control", type = "date", id = "appointmentDate" })
+                        @Html.LabelFor(m => m.AppointmentDate)
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
+                        @Html.DropDownListFor(m => m.AppointmentTime, new List<SelectListItem>(), "-- Select Available Time --", new { @class = "form-select", id = "appointmentTime" })
+                        @Html.LabelFor(m => m.AppointmentTime)
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", type = "number", min = "1" })
+                        @Html.LabelFor(m => m.Duration)
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-custom px-5 shadow-sm animate__animated animate__pulse">
+                    <i class="bi bi-plus-circle-dotted"></i> Add Appointment
+                </button>
+            </div>
+        }
     </div>
-
-    @using (Html.BeginForm("SaveNew", "Appointment", FormMethod.Post))
-    {
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    @Html.DropDownListFor(m => m.PatientId, (SelectList)ViewBag.Patients, "-- Select Patient --", new { @class = "form-select" })
-                    @Html.LabelFor(m => m.Patient)
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    @Html.DropDownListFor(m => m.DoctorId, (SelectList)ViewBag.Doctors, "-- Select Doctor --", new { @class = "form-select", id = "doctorSelect" })
-                    @Html.LabelFor(m => m.Doctor)
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.AppointmentDate,  new { @class = "form-control", type = "date", id = "appointmentDate" })
-                    @Html.LabelFor(m => m.AppointmentDate)
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-floating mb-3">
-                    @Html.DropDownListFor(m => m.AppointmentTime, new List<SelectListItem>(), "-- Select Available Time --", new { @class = "form-select", id = "appointmentTime" })
-                    @Html.LabelFor(m => m.AppointmentTime)
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", type = "number", min = "1" })
-                    @Html.LabelFor(m => m.Duration)
-                </div>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4">
-            <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm animate__animated animate__pulse">
-                <i class="bi bi-plus-circle-dotted"></i> Add Appointment
-            </button>
-        </div>
-    }
 </div>
 
 @section Scripts {
@@ -74,8 +182,9 @@
             var doctorId = $("#doctorSelect").val();
             var date = $("#appointmentDate").val();
             if (!doctorId || !date) return;
+
             $.getJSON('/Appointment/GetFreeSlots', { doctorId: doctorId, appointmentDate: date }, function (data) {
-                availableSlots = data;
+                var availableSlots = data;
                 var timeSelect = $("#appointmentTime");
                 timeSelect.empty();
 
@@ -83,18 +192,15 @@
                     timeSelect.append($('<option>').text("No available slots").attr("disabled", true));
                 } else {
                     $.each(availableSlots, function (i, val) {
-                        // نحول الوقت من 24 إلى 12 ساعة مع AM/PM
                         let [hours, minutes] = val.split(':');
                         hours = parseInt(hours);
                         const ampm = hours >= 12 ? 'PM' : 'AM';
-                        hours = hours % 12 || 12; // تحويل 0 أو 12 إلى 12
+                        hours = hours % 12 || 12;
                         const formattedTime = `${hours}:${minutes} ${ampm}`;
-
                         timeSelect.append($('<option>').text(formattedTime).val(val));
                     });
                 }
             });
-
         }
 
         $("#doctorSelect, #appointmentDate").change(loadFreeSlots);

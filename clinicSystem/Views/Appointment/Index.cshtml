@@ -3,22 +3,32 @@
     ViewData["Title"] = "Appointments";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 <div class="container my-5 animate__animated animate__fadeIn">
-    <h1 class="text-center text-success mb-4 fw-bold display-4">
+   @*  <h1 class="text-center text-primary mb-4 fw-bold display-4">
         All Appointments
     </h1>
-    <h6 class="text-center mb-4"><span class="text-danger fw-bolder">Note:</span> The Appointment for Patient include (Time + Duration)</h6>
+    <h6 class="text-center mb-4"><span class="text-danger fw-bolder">Note:</span> The Appointment for Patient include (Time + Duration)</h6> *@
+
+    <div class="text-center mb-4">
+        <h1 class="page-header">
+            All <span class="text-primary">Appointments</span>
+        </h1>
+        <h3 class="page-subtitle">
+            Note: The Appointment for Patient include (Time + Duration)
+        </h3>
+    </div>
 
     <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-success btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
+        <a class="btn btn-custom btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
             <i class="bi bi-plus-circle"></i> Add Appointment
         </a>
     </div>
 
     <div class="table-responsive">
         <table class="table table-hover table-striped table-bordered align-middle shadow-sm animate__animated animate__fadeInUp">
-            <thead class="table-success text-center">
+            <thead class="table-light text-center">
                 <tr>
                     <th>Patient</th>
                     <th>Doctor</th>
@@ -35,7 +45,6 @@
                         <td>@item.Doctor.Name</td>
                         <td>@item.AppointmentDate.ToShortDateString()</td>
                         <td>@DateTime.Today.Add(item.AppointmentTime).ToString("hh:mm tt")</td>
-
                         <td>@item.Duration</td>
                     </tr>
                 }
@@ -44,34 +53,54 @@
     </div>
 </div>
 
-
-
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
 <style>
+
+    .page-header {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+        .page-header span {
+            color: #0dcaf0;
+        }
+
+    .page-subtitle {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #7f8c8d;
+    }
+
+    /* ==== Buttons ==== */
+    .btn-custom {
+        border: 2px solid #0dcaf0;
+        color: #0dcaf0;
+        background-color: transparent;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        padding: 0.8rem 2.5rem;
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #0dcaf0, #0aa1c0);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+    /* ==== Table ==== */
     .table thead th {
         font-size: 1.2rem;
         letter-spacing: 0.5px;
+        color: #2c3e50;
     }
 
     .table tbody td {
         font-size: 1.05rem;
         padding: 0.75rem;
     }
-
-    .btn-success {
-        transition: all 0.4s ease;
-    }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #28a745, #218838);
-            border-color: transparent;
-            transform: scale(1.05);
-        }
 
     .table-row-hover:hover {
         background-color: #e6f7ff !important;
@@ -84,5 +113,3 @@
         text-decoration: underline;
     }
 </style>
-
-

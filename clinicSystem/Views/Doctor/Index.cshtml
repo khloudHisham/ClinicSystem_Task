@@ -3,20 +3,31 @@
     ViewData["Title"] = "Doctors";
 }
 
-<div class="container my-5 animate__animated animate__fadeIn">
-    <h1 class="text-center text-success mb-4 fw-bold display-4">
-        All Doctors
-    </h1>
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
+<div class="container my-5 animate__animated animate__fadeIn">
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <h1 class="page-header">
+            All <span class="text-primary">Doctors</span>
+        </h1>
+        <h3 class="page-subtitle">
+            Manage all doctors and their associated clinics
+        </h3>
+    </div>
+
+    <!-- Add Button -->
     <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-success btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
+        <a class="btn btn-primary btn-lg shadow-sm animate__animated animate__fadeInDown" asp-action="New">
             <i class="bi bi-plus-circle"></i> Add Doctor
         </a>
     </div>
 
+    <!-- Doctors Table -->
     <div class="table-responsive">
         <table class="table table-hover table-striped table-bordered align-middle shadow-sm animate__animated animate__fadeInUp">
-            <thead class="table-success text-center">
+            <thead class="table-primary text-center">
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
@@ -37,14 +48,26 @@
     </div>
 </div>
 
-
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
 <style>
+    /* Header Styles */
+    .page-header {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+        .page-header span {
+            color: #0dcaf0;
+        }
+
+    .page-subtitle {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #7f8c8d;
+    }
+
+    /* Table Styling */
     .table thead th {
         font-size: 1.2rem;
         letter-spacing: 0.5px;
@@ -55,25 +78,30 @@
         padding: 0.75rem;
     }
 
-    .btn-success {
-        transition: all 0.4s ease;
-    }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #28a745, #218838);
-            border-color: transparent;
-            transform: scale(1.05);
-        }
-
     .table-row-hover:hover {
         background-color: #e6f7ff !important;
         transition: background-color 0.3s ease;
         cursor: pointer;
     }
 
+    /* Button Styling */
+    .btn-primary {
+        background-color: #0dcaf0;
+        border-color: #0dcaf0;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: all 0.4s ease;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0dcaf0, #0aa3cc);
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+
     a.text-primary:hover {
         color: #0d6efd;
         text-decoration: underline;
     }
 </style>
-

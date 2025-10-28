@@ -3,75 +3,152 @@
     ViewData["Title"] = "New Patient";
 }
 
-<div class="container my-5 animate__animated animate__fadeIn">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-success fw-bold display-5">Create New Patient</h1>
-        <a class="btn btn-outline-danger btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Patient/Index">
-            <i class="bi bi-arrow-left-circle"></i> Back
-        </a>
-    </div>
-
-    @using (Html.BeginForm("SaveNew", "Patient", FormMethod.Post))
-    {
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.Name)
-                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.Address)
-                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger small" })
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                    @Html.LabelFor(m => m.BirthDate)
-                    @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger small" })
-                </div>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4">
-            <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm animate__animated animate__pulse">
-                <i class="bi bi-plus-circle-dotted"></i> Add Patient
-            </button>
-        </div>
-    }
-</div>
-
-
-
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-    .form-floating > .form-control, .form-floating > .form-select {
-        height: calc(3.5rem + 2px);
-        padding: 1rem 0.75rem;
+    /* ==== General Page Styling ==== */
+    body {
+        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        font-family: 'Poppins', sans-serif;
     }
 
-    .form-floating > label {
-        padding: 0.75rem 0.75rem;
-        pointer-events: none;
-        font-weight: bold;
-        color: #6c757d;
+    .page-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 3rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        animation: fadeInUp 0.8s ease-in-out;
     }
 
-    button.btn-success:hover {
-        background: linear-gradient(135deg, #28a745, #218838);
-        border-color: transparent;
-        transform: scale(1.05);
-        transition: all 0.4s ease;
+    .page-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    }
+
+    /* ==== Custom Blue Buttons ==== */
+    .btn-custom {
+        border: 2px solid #0dcaf0;
+        color: #0dcaf0;
+        background-color: transparent;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        padding: 0.8rem 2.5rem;
+    }
+
+        .btn-custom:hover {
+            background-color: #0dcaf0;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    /* ==== Floating Form Fields ==== */
+    .form-floating label {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    .form-select, .form-control {
+        border-radius: 12px !important;
+        border: 2px solid #0dcaf0 !important;
+        transition: all 0.3s ease;
+    }
+
+        .form-select:focus, .form-control:focus {
+            border-color: #0aa1c0 !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+        }
+
+    /* ==== Popup Styling ==== */
+    #popup {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 2rem 3rem;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+        z-index: 999;
+        animation: fadeInDown 0.5s ease;
+        text-align: center;
+    }
+
+    #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
+@if (TempData["PopupData"] != null)
+{
+    <div id="popup">
+        <pre id="popupContent">@TempData["PopupData"]</pre>
+        <button onclick="closePopup()" class="btn btn-custom mt-3">Ok</button>
+    </div>
+    <div id="overlay"></div>
+}
+
+<div class="container my-5">
+    <div class="page-container animate__animated animate__fadeIn">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="page-title">Create New Patient</h1>
+            <a class="btn btn-custom btn-lg shadow-sm animate__animated animate__fadeInDown" href="/Patient/Index">
+                <i class="bi bi-arrow-left-circle"></i> Back
+            </a>
+        </div>
+
+        @using (Html.BeginForm("SaveNew", "Patient", FormMethod.Post))
+        {
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.Name)
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.Address)
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        @Html.LabelFor(m => m.BirthDate)
+                        @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-custom px-5 shadow-sm animate__animated animate__pulse">
+                    <i class="bi bi-plus-circle-dotted"></i> Add Patient
+                </button>
+            </div>
+        }
+    </div>
+</div>
